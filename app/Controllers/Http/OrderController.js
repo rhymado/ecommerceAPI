@@ -1,6 +1,7 @@
 'use strict'
 
 const Order = use('App/Models/Order')
+const Database = use('Database')
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
@@ -95,7 +96,6 @@ class OrderController {
     await order.save()
     return response.status(200).json(order)
   }
-
   /**
    * Delete a order with id.
    * DELETE orders/:id
@@ -111,6 +111,11 @@ class OrderController {
     }
     await order.delete()
     return response.status(204).json(null)
+  }
+
+  async empty({ request, response }) {
+    const affectedRows = await Database.truncate('orders')
+    return response.json(affectedRows)
   }
 }
 
