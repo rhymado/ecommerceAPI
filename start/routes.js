@@ -20,8 +20,9 @@ Route.group(() => {
     Route.post('products', 'ProductController.store')
     Route.get('products', 'ProductController.index')
     Route.get('product/:id', 'ProductController.show')
+
     Route.get('orders', 'OrderController.index')
-    Route.post('orders', 'OrderController.store')
+    Route.post('order', 'OrderController.store')
     Route.patch('order/:id', 'OrderController.update')
     Route.delete('order/:id', 'OrderController.destroy')
 }).prefix('api/v1')

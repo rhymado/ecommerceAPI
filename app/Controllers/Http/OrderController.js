@@ -19,7 +19,7 @@ class OrderController {
    * @param {View} ctx.view
    */
   async index({ request, response, view }) {
-    let orders = await Order.all()
+    let orders = await Order.query().with('product').fetch()
     return response.json(orders)
   }
 
@@ -44,9 +44,9 @@ class OrderController {
    * @param {Response} ctx.response
    */
   async store({ request, response }) {
-    const orderInfo = request.only(['productid', 'qty', 'price'])
+    const orderInfo = request.only(['product_id', 'qty', 'price'])
     const order = new Order()
-    order.productid = orderInfo.productid
+    order.product_id = orderInfo.product_id
     order.qty = orderInfo.qty
     order.price = orderInfo.price
     await order.save()
@@ -86,14 +86,12 @@ class OrderController {
    * @param {Response} ctx.response
    */
   async update({ params, request, response }) {
-    const orderInfo = request.only(['productid', 'qty', 'price'])
+    const orderInfo = request.only(['qty'])
     const order = await Order.find(params.id)
     if (!order) {
       return response.status(404).json({ data: 'Order not found' })
     }
-    order.productid = orderInfo.productid
     order.qty = orderInfo.qty
-    order.price = orderInfo.price
     await order.save()
     return response.status(200).json(order)
   }
