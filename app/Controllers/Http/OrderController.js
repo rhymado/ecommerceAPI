@@ -91,7 +91,7 @@ class OrderController {
     const order = await Order.find(params.id)
     if (!order) {
       return response.status(404).json({ data: 'Order not found' })
-    }
+    }// try catch
     order.qty = orderInfo.qty
     await order.save()
     return response.status(200).json(order)

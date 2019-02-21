@@ -44,13 +44,12 @@ class ProductController {
    * @param {Response} ctx.response
    */
   async store({ request, response }) {
-    const productInfo = request.only(['name', 'image', 'price', 'description'])
-    const product = new Product()
-    product.name = productInfo.name
-    product.image = productInfo.image
-    product.price = productInfo.price
-    product.description = productInfo.description
-    await product.save()
+    const productData = request.only(['name', 'image', 'price', 'description'])
+    // product.name = productInfo.name
+    // product.image = productInfo.image
+    // product.price = productInfo.price
+    // product.description = productInfo.description
+    const product = await Product.create(productData)
     return response.status(201).json(product)
   }
 
