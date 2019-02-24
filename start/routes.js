@@ -26,4 +26,11 @@ Route.group(() => {
     Route.patch('order/:id', 'OrderController.update')
     Route.delete('order/:id', 'OrderController.destroy')
     Route.delete('orders', 'OrderController.empty')
+
+    Route.get('user/:id', 'ProfileController.show')
+    Route.post('user', 'ProfileController.store')
+    Route.patch('user/:id', 'ProfileController.update')
+    Route.delete('user/:id', 'ProfileController.destroy')
+
+    Route.post('transactions', 'TransactionController.store')
 }).prefix('api/v1')

@@ -1,7 +1,7 @@
-'use strict'
+'use strict';
 
-const Order = use('App/Models/Order')
-const Database = use('Database')
+const Order = use ('App/Models/Order');
+const Database = use ('Database');
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
@@ -19,9 +19,13 @@ class OrderController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async index({ request, response, view }) {
-    let orders = await Order.query().with('product').fetch()
-    return response.json(orders)
+  async index({request, response, view}) {
+    try {
+      let orders = await Order.query ().with ('product').fetch ();
+      return response.json (orders);
+    } catch (error) {
+      console.log (error);
+    }
   }
 
   /**
@@ -33,8 +37,7 @@ class OrderController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async create({ request, response, view }) {
-  }
+  async create({request, response, view}) {}
 
   /**
    * Create/save a new order.
@@ -44,14 +47,18 @@ class OrderController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async store({ request, response }) {
-    const orderInfo = request.only(['product_id', 'qty', 'price'])
-    const order = new Order()
-    order.product_id = orderInfo.product_id
-    order.qty = orderInfo.qty
-    order.price = orderInfo.price
-    await order.save()
-    return response.status(201).json(order)
+  async store({request, response}) {
+    try {
+      const orderInfo = request.only (['product_id', 'qty', 'price']);
+      const order = new Order ();
+      order.product_id = orderInfo.product_id;
+      order.qty = orderInfo.qty;
+      order.price = orderInfo.price;
+      await order.save ();
+      return response.status (201).json (order);
+    } catch (error) {
+      console.log (error);
+    }
   }
 
   /**
@@ -63,8 +70,7 @@ class OrderController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async show({ params, request, response, view }) {
-  }
+  async show({params, request, response, view}) {}
 
   /**
    * Render a form to update an existing order.
@@ -75,8 +81,7 @@ class OrderController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async edit({ params, request, response, view }) {
-  }
+  async edit({params, request, response, view}) {}
 
   /**
    * Update order details.
@@ -86,15 +91,17 @@ class OrderController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async update({ params, request, response }) {
-    const orderInfo = request.only(['qty'])
-    const order = await Order.find(params.id)
-    if (!order) {
-      return response.status(404).json({ data: 'Order not found' })
-    }// try catch
-    order.qty = orderInfo.qty
-    await order.save()
-    return response.status(200).json(order)
+  async update({params, request, response}) {
+    try {
+      const orderInfo = request.only (['qty']);
+      const order = await Order.find (params.id);
+      order.qty = orderInfo.qty;
+      await order.save ();
+      return response.status (200).json (order);
+    } catch (error) {
+      console.log (error);
+      return response.status (404).json ({data: 'Order not found'});
+    }
   }
   /**
    * Delete a order with id.
@@ -104,19 +111,25 @@ class OrderController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async destroy({ params, request, response }) {
-    const order = await Order.find(params.id)
-    if (!order) {
-      return response.status(404).json({ data: 'Order not found' })
+  async destroy({params, request, response}) {
+    try {
+      const order = await Order.find (params.id);
+      await order.delete ();
+      return response.status (204).json (null);
+    } catch (error) {
+      console.log (error);
+      return response.status (404).json ({data: 'Order not found'});
     }
-    await order.delete()
-    return response.status(204).json(null)
   }
 
-  async empty({ request, response }) {
-    const affectedRows = await Database.truncate('orders')
-    return response.json(affectedRows)
+  async empty({request, response}) {
+    try {
+      const affectedRows = await Database.truncate ('orders');
+      return response.json (affectedRows);
+    } catch (error) {
+      console.log (error);
+    }
   }
 }
 
-module.exports = OrderController
+module.exports = OrderController;
